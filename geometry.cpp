@@ -160,6 +160,11 @@ Line::Line(Point a, Point b) {
 	this -> b = b;
 }
 
+Line::Line(Point a, Vector v) {
+	this -> a = a;
+	this -> b = a + v;
+}
+
 Vector Line::napr() {
 	return Vector(a, b);
 }

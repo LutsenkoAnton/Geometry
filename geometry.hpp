@@ -51,6 +51,7 @@ struct Line {
 
     Line();
     Line(Point, Point);
+    Line(Point, Vector);
 
     Vector napr();
     operator Vector();
