@@ -23,10 +23,6 @@ geomt dist2(Point a, Point b) {
 	return (a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y) + (a.z - b.z) * (a.z - b.z);
 }
 
-geomt dist(Point a, Point b) {
-	return sqrt(dist2(a, b));
-}
-
 Vector::Vector() {
 	x = 0;
 	y = 0;
@@ -47,7 +43,7 @@ geomt Vector::operator*(Vector other) {
 }
 
 Vector Vector::operator*(geomt num) {
-    return Vector(x * num, y * num, z * num);
+	return Vector(x * num, y * num, z * num);
 }
 
 geomt Vector::size2() {
@@ -59,11 +55,11 @@ geomt Vector::size() {
 }
 
 Vector operator*(geomt num, Vector v) {
-    return v * num;
+	return v * num;
 }
 
 Point operator+(Point p, Vector v) {
-    return Point(p.x + v.x, p.y + v.y, p.z + v.z);
+	return Point(p.x + v.x, p.y + v.y, p.z + v.z);
 }
 
 std::ostream &operator<<(std::ostream &out, Vector p) {
@@ -131,22 +127,22 @@ Plane::Plane(Point a, Point b, Point c) {
 
 std::ostream &operator<<(std::ostream &out, Plane p) {
 	out << p.a << "x";
-    if ((double)p.b >= 0) {
-        out << " + " << p.b << "y";
-    } else {
-        out << " - " << -p.b << "y";
-    }
-    if ((double)p.c >= 0) {
-        out << " + " << p.c << "z";
-    } else {
-        out << " - " << -p.c << "z";
-    }
-    if ((double)p.d >= 0) {
-        out << " + " << p.d;
-    } else {
-        out << " - " << -p.d;
-    }
-    out << " = 0";
+	if ((double)p.b >= 0) {
+		out << " + " << p.b << "y";
+	} else {
+		out << " - " << -p.b << "y";
+	}
+	if ((double)p.c >= 0) {
+		out << " + " << p.c << "z";
+	} else {
+		out << " - " << -p.c << "z";
+	}
+	if ((double)p.d >= 0) {
+		out << " + " << p.d;
+	} else {
+		out << " - " << -p.d;
+	}
+	out << " = 0";
 	return out;
 }
 
@@ -154,12 +150,50 @@ Vector Plane::norm() {
 	return Vector(a, b, c);
 }
 
+Line::Line() {
+	a = Point();
+	b = Point(1, 0, 0);
+}
+
+Line::Line(Point a, Point b) {
+	this -> a = a;
+	this -> b = b;
+}
+
+Vector Line::napr() {
+	return Vector(a, b);
+}
+
+Line::operator Vector() {
+	return napr();
+}
+
+std::ostream &operator<<(std::ostream & out, Line l) {
+	out << l.a.x << " + " << l.napr().x << "* t;\n";
+	out << l.a.y << " + " << l.napr().y << "* t;\n";
+	out << l.a.z << " + " << l.napr().z << "* t.\n";
+	return out;
+}
+
 Point otnosh(Point a, Point b, geomt otna, geomt otnb) {
 	return Point((a.x * otnb + b.x * otna) / (otna + otnb), (a.y * otnb + b.y * otna) / (otna + otnb), (a.z * otnb + b.z * otna) / (otna + otnb));
 }
 
+geomt dist(Point a, Point b) {
+	return sqrt(dist2(a, b));
+}
+
 geomt dist(Point a, Plane p) {
 	return (p.a * a.x + p.b * a.y + p.c * a.z + p.d) / p.norm().size();
+}
+
+geomt dist(Point a, Line l) {
+	geomt ang = angle(Vector(l.a, a), Vector(l.a, l.b));
+	return dist(a, l.a) * (1 - ang * ang);
+}
+
+geomt dist(Line l, Line m) {
+	dist(m.a, Plane(l.a, l.b, l.a + m.napr()));
 }
 
 geomt angle(Vector a, Vector b) {
@@ -167,13 +201,13 @@ geomt angle(Vector a, Vector b) {
 }
 
 geomt angle(Vector v, Plane p) {
-    return (geomt)1 - angle(v, p.norm()) * angle(v, p.norm());
+	return (geomt)1 - angle(v, p.norm()) * angle(v, p.norm());
 }
 
 geomt angle(Plane p, Vector v) {
-    return angle(v, p);
+	return angle(v, p);
 }
 
 geomt angle(Plane a, Plane b) {
-    return angle(a.norm(), b.norm());
+	return angle(a.norm(), b.norm());
 }

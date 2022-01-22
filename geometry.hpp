@@ -46,11 +46,24 @@ struct Plane {
 
 std::ostream &operator<<(std::ostream &, Plane);
 
+struct Line {
+    Point a, b;
+
+    Line();
+    Line(Point, Point);
+
+    Vector napr();
+    operator Vector();
+};
+
+std::ostream &operator<<(std::ostream &, Line);
+
 Point otnosh(Point, Point, geomt, geomt);
 
 geomt dist(Point, Point); 
 geomt dist(Point, Plane); 
-geomt dist(Point, Vector); 
+geomt dist(Point, Line); 
+geomt dist(Line, Line); 
 
 geomt angle(Vector, Vector);
 geomt angle(Vector, Plane);
