@@ -194,11 +194,11 @@ geomt dist(Point a, Plane p) {
 
 geomt dist(Point a, Line l) {
 	geomt ang = angle(Vector(l.a, a), Vector(l.a, l.b));
-	return dist(a, l.a) * (1 - ang * ang);
+	return dist(a, l.a) * ((geomt)1 - ang * ang);
 }
 
 geomt dist(Line l, Line m) {
-	dist(m.a, Plane(l.a, l.b, l.a + m.napr()));
+	return dist(m.a, Plane(l.a, l.b, l.a + m.napr()));
 }
 
 geomt angle(Vector a, Vector b) {
