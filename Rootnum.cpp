@@ -179,12 +179,17 @@ Rootnum sqrt(Rootnum r) {
 }
 
 std::ostream &operator<<(std::ostream &out, Rootnum r) {
+    if (std::abs((double)r)< EPS) {
+        out << "0";
+        return out;
+    }
     if (r.lvl == 0) {
         out << r.lvl0data;
         return out;
     }
     bool first = true;
     for (auto [a, b] : r.val) {
+        if (b == 0) continue;
         if (!first) {
             out << " + ";
         } else {
